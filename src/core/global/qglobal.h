@@ -665,11 +665,27 @@ constexpr inline auto qBound(const T1 &min, const T2 &val, const T3 &max) -> dec
 
 #endif
 
+#ifndef Q_DECL_EXPORT_INLINE
+#  if defined(Q_CC_MSVC)
+#    define Q_DECL_EXPORT_INLINE
+#  else
+#    define Q_DECL_EXPORT_INLINE    Q_DECL_EXPORT
+#  endif
+#endif
+
 #ifndef Q_DECL_IMPORT
 #  if defined(Q_OS_WIN)
 #    define Q_DECL_IMPORT    __declspec(dllimport)
 #  else
 #    define Q_DECL_IMPORT
+#  endif
+#endif
+
+#ifndef Q_DECL_IMPORT_INLINE
+#  if defined(Q_CC_MSVC)
+#    define Q_DECL_IMPORT_INLINE
+#  else
+#    define Q_DECL_IMPORT_INLINE    Q_DECL_IMPORT
 #  endif
 #endif
 
