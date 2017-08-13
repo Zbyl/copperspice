@@ -352,21 +352,19 @@ QT_USE_NAMESPACE
 #elif defined(_MSC_VER)
 //  **
 
-#  if ( _MSC_VER >= 1900  )
-#    define Q_CC_MSVC
-#    define Q_OUTOFLINE_TEMPLATE inline
+#  if (_MSC_VER < 1910)
+#    error "CopperSpice requires MSVC 2017 (15) or greater"
+#  endif
 
-#    define Q_ALIGNOF(type)   __alignof(type)
+#  define Q_CC_MSVC
+#  define Q_OUTOFLINE_TEMPLATE inline
 
-#    if defined(_M_X64)
-#      undef QT_HAVE_SSE
-#      undef QT_HAVE_MMX
-#      undef QT_HAVE_3DNOW
-#    endif
+#  define Q_ALIGNOF(type)   __alignof(type)
 
-#  else
-#    error "CopperSpice requires MSVC 2015 (14) or greater"
-
+#  if defined(_M_X64)
+#    undef QT_HAVE_SSE
+#    undef QT_HAVE_MMX
+#    undef QT_HAVE_3DNOW
 #  endif
 
 
