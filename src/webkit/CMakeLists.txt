@@ -2,6 +2,10 @@ add_definitions(
     -DWTF_CHANGES
     -UHAVE_CONFIG_H
     -DBUILDING_WEBKIT
+    -DBUILDING_JavaScriptCore
+    -DBUILDING_WTF
+    -DBUILDING_WebCore
+    -DBUILDING_WebKit
     -DBUILDING_QT__=1
     -DWTF_PLATFORM_QT=1
     -DENABLE_WORKERS=1
@@ -32,7 +36,11 @@ set(EXTRA_WEBKIT_LIBS
     CsNetwork${BUILD_ABI}
     CsScript${BUILD_ABI}
 )
-set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC) # that's not always wanted!
+if(NOT MSVC)
+    set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC) # that's not always wanted!
+else()
+    # TODO: On MSVC O2 in debug is problematic due to conflict with /RTC1.
+endif()
 set(EXTRA_WEBKIT_LDFLAGS)
 
 include_directories(
@@ -2345,7 +2353,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         ${CMAKE_SOURCE_DIR}/src/3rdparty/webkit/Source/WebCore/plugins/win/PluginViewWin.cpp
         ${CMAKE_SOURCE_DIR}/src/3rdparty/webkit/Source/WebCore/platform/win/BitmapInfo.cpp
         ${CMAKE_SOURCE_DIR}/src/3rdparty/webkit/Source/WebCore/platform/win/WebCoreInstanceHandle.cpp
+        ${CMAKE_SOURCE_DIR}/src/3rdparty/webkit/Source/WebCore/plugins/win/PaintHooks.asm
     )
+
     set(EXTRA_WEBKIT_LIBS
         ${EXTRA_WEBKIT_LIBS}
         gdi32
@@ -2353,10 +2363,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         shlwapi
         version
     )
-    set(EXTRA_WEBKIT_LDFLAGS
-        ${EXTRA_WEBKIT_LDFLAGS}
-        -Wl,-s
-    )
+    if(NOT MSVC)
+        set(EXTRA_WEBKIT_LDFLAGS
+            ${EXTRA_WEBKIT_LDFLAGS}
+            -Wl,-s
+        )
+    endif()
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "(Linux|OpenBSD|FreeBSD|NetBSD|DragonFly)")
     add_definitions(-DXP_UNIX
         -DENABLE_NETSCAPE_PLUGIN_METADATA_CACHE=1

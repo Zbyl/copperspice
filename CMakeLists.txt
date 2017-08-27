@@ -33,6 +33,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 project(copperspice)
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    enable_language(ASM_MASM)
+endif()
+
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 include(CheckIncludeFile)
@@ -448,6 +452,7 @@ install(EXPORT CopperSpiceLibraryTargets
     DESTINATION cmake/CopperSpice
 )
 
+# TODO: Breaks without WITH_XML due to CopperSpiceBinaryTargets being not defined.
 install(
     EXPORT CopperSpiceBinaryTargets
     NAMESPACE CopperSpice::

@@ -124,10 +124,22 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         imm32
         uuid
     )
-    set(EXTRA_GUI_LDFLAGS
-        ${EXTRA_GUI_LDFLAGS}
-         -Wl,--export-all-symbols
-    )
+    if(MSVC)
+        # CsGui library produces a lot of symbols, so we need to specify bigobj and turn off incremental linking.
+        set(EXTRA_GUI_LDFLAGS
+            ${EXTRA_GUI_LDFLAGS}
+            /INCREMENTAL:NO
+        )
+        set(EXTRA_GUI_CXXFLAGS
+            ${EXTRA_GUI_CXXFLAGS}
+            /bigobj
+        )
+    else()
+        set(EXTRA_GUI_LDFLAGS
+            ${EXTRA_GUI_LDFLAGS}
+            -Wl,--export-all-symbols
+        )
+    endif()
     add_definitions(
         -DQT_NO_STYLE_MAC
         -DQT_NO_LPR
@@ -189,6 +201,7 @@ install(
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RESOURCE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 install(

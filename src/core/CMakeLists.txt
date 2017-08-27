@@ -1,6 +1,7 @@
 add_definitions(
    -DQT_BUILD_CORE_LIB
    -DBUILDING_LIB_CS_SIGNAL
+   -DBUILDING_LIB_CS_STRING
 )
 
 set(EXTRA_CORE_LIBS ${GLIB2_LIBRARIES} ${GOBJECT2_LIBRARIES})
@@ -89,10 +90,18 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       ole32
       ws2_32
    )
-   set(EXTRA_CORE_LDFLAGS
-      ${EXTRA_CORE_LDFLAGS}
-      -Wl,-luuid
-   )
+   if(MSVC)
+       # CsCore library produces a lot of symbols, so we need to specify bigobj.
+       set(EXTRA_CORE_CXXFLAGS
+           ${EXTRA_CORE_CXXFLAGS}
+           /bigobj
+       )
+   else()
+       set(EXTRA_CORE_LDFLAGS
+          ${EXTRA_CORE_LDFLAGS}
+          -Wl,-luuid
+       )
+   endif()
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    set(EXTRA_CORE_LDFLAGS
       ${EXTRA_CORE_LDFLAGS}
