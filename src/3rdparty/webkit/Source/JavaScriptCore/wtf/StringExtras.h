@@ -37,22 +37,6 @@
 #if COMPILER(MSVC)
 // FIXME: why a COMPILER check instead of OS? also, these should be HAVE checks
 
-inline int snprintf(char* buffer, size_t count, const char* format, ...) 
-{
-    int result;
-    va_list args;
-    va_start(args, format);
-    result = _vsnprintf(buffer, count, format, args);
-    va_end(args);
-
-    // In the case where the string entirely filled the buffer, _vsnprintf will not
-    // null-terminate it, but snprintf must.
-    if (count > 0)
-        buffer[count - 1] = '\0';
-
-    return result;
-}
-
 inline double wtf_vsnprintf(char* buffer, size_t count, const char* format, va_list args)
 {
     int result = _vsnprintf(buffer, count, format, args);

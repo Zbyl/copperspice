@@ -34,6 +34,10 @@
 #include <CoreFoundation/CFString.h>
 #endif
 
+#if COMPILER(MSVC) && ! defined(WINCEBASIC)
+#include <windows.h>
+#endif
+
 extern "C" {
 
 WTF_ATTRIBUTE_PRINTF(1, 0)

@@ -75,12 +75,14 @@ ContextMenuItem::ContextMenuItem(const ContextMenuItem & other)
 ContextMenuItem& ContextMenuItem::operator=(const ContextMenuItem & other)
 {
     m_platformDescription.reset(new PlatformMenuItemDescription(*other.m_platformDescription));
+    return *this;
 }
 
 ContextMenuItem& ContextMenuItem::operator=(ContextMenuItem && other)
 {
     m_platformDescription.swap(other.m_platformDescription);
     other.m_platformDescription.reset();
+    return *this;
 }
 
 #endif

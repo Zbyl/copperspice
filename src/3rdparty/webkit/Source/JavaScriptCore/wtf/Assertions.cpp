@@ -43,6 +43,9 @@
 
 #if OS(WINDOWS)
 #include <windows.h>
+#if defined(_DEBUG)
+#  include <crtdbg.h>
+#endif
 #endif
 
 #if PLATFORM(BREWMP)

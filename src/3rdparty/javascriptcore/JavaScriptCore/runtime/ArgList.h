@@ -172,7 +172,10 @@ namespace JSC {
         void operator delete[](void*);
 
         void* operator new(size_t, void*);
-        void operator delete(void*, size_t);
+        void operator delete(void* p, size_t)
+        {
+            fastFree(p);
+        }
     };
 
     class ArgList {
