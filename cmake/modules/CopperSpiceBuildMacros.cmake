@@ -12,7 +12,7 @@
 #   MACRO_GENERATE_PRIVATE()
 #   MACRO_GENERATE_MISC()
 #   MACRO_GENERATE_RESOURCES()
-#   MACRO_WINDOWS_RESOURCES()
+#   FUNCTION_WINDOWS_RESOURCES()
 #   MACRO_GENERATE_PACKAGE()
 #   FUNCTION_VARIABLE_FIXUP()
 #
@@ -25,7 +25,7 @@
 #
 #   MACRO_GENERATE_RESOURCES(<userinterface.ui> [<resource.qrc>] ...)
 #
-#   MACRO_WINDOWS_RESOURCES(<windowsmanifest.manifest> [<windowsresource.rc>] ...)
+#   FUNCTION_WINDOWS_RESOURCES(<windowsmanifest.manifest> [<windowsresource.rc>] ... <variablename>)
 #
 #   MACRO_GENERATE_PACKAGE(<name> <realname> <cxxflags> <libraries> <requires>)
 #
@@ -94,20 +94,16 @@ macro(MACRO_GENERATE_RESOURCES RESOURCES)
     endforeach()
 endmacro()
 
-macro(MACRO_WINDOWS_RESOURCES RESOURCES RSCNAME)
+# This function processes given manifest and resource files and
+# outputs list of resulting files to COMPILED_RESOURCES_VAR.
+function(FUNCTION_WINDOWS_RESOURCES RESOURCES COMPILED_RESOURCES_VAR)
+    set(COMPILED_RESOURCES "")
     foreach(resource ${RESOURCES})
         get_filename_component(rscext ${resource} EXT)
         get_filename_component(rscname ${resource} NAME_WE)
         if(${rscext} MATCHES ".manifest" AND NOT MINGW)
-            set(rscout ${CMAKE_CURRENT_BINARY_DIR}/${rscname})
-            execute_process(
-                COMMAND ${MT_EXECUTABLE} -nologo -manifest ${resource} -outputresource:${rscout}
-                RESULT_VARIABLE ${rscname}_ERROR
-            )
-            if(NOT ${rscname}_ERROR EQUAL 0)
-                message(SEND_ERROR "running ${MT_EXECUTABLE} on ${resource} failed")
-            endif()
-            set(${RSCNAME} ${rscout})
+            # CMake will merge .manifest files into the target.
+            list(APPEND COMPILED_RESOURCES "${resource}")
         elseif(${rscext} STREQUAL ".rc" AND MSVC)
             # MinGW, manifest alternative on Windows host
             set(rscout ${CMAKE_CURRENT_BINARY_DIR}/${rscname}.res)
@@ -118,7 +114,7 @@ macro(MACRO_WINDOWS_RESOURCES RESOURCES RSCNAME)
             if(NOT ${rscname}_ERROR EQUAL 0)
                 message(SEND_ERROR "running ${WINDRES_EXECUTABLE} on ${resource} failed")
             endif()
-            set(${RSCNAME} ${rscout})
+            list(APPEND COMPILED_RESOURCES "${rscout}")
         elseif(${rscext} STREQUAL ".rc")
             # MinGW, manifest alternative on GNU host
             set(rscout ${CMAKE_CURRENT_BINARY_DIR}/${rscname}.o)
@@ -129,10 +125,11 @@ macro(MACRO_WINDOWS_RESOURCES RESOURCES RSCNAME)
             if(NOT ${rscname}_ERROR EQUAL 0)
                 message(SEND_ERROR "running ${WINDRES_EXECUTABLE} on ${resource} failed")
             endif()
-            set(${RSCNAME} ${rscout})
+            list(APPEND COMPILED_RESOURCES "${rscout}")
         endif()
     endforeach()
-endmacro()
+    set(${COMPILED_RESOURCES_VAR} "${COMPILED_RESOURCES}" PARENT_SCOPE)
+endfunction()
 
 macro(MACRO_GENERATE_PACKAGE PC_NAME PC_REALNAME PC_CFLAGS PC_REQUIRES)
     if(UNIX)       
