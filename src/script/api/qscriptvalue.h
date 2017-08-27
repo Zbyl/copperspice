@@ -35,7 +35,7 @@ class QScriptEngine;
 class QScriptString;
 class QVariant;
 class QObject;
-struct QMetaObject;
+class QMetaObject;
 class QDateTime;
 
 #ifndef QT_NO_REGEXP

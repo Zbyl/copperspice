@@ -158,7 +158,7 @@ int QScriptStaticScopeObject::growRegisterArray(int count)
    }
    setRegisters(registerArray + newSize, registerArray);
    d_ptr()->registerArraySize = newSize;
-   return -oldSize - 1;
+   return - static_cast<int>(oldSize + 1);
 }
 
 QT_END_NAMESPACE
