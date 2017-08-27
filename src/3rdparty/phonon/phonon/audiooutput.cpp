@@ -573,17 +573,12 @@ void AudioOutput::_k_deviceChanged(QString streamUuid,int device)
 
 } //namespace Phonon
 
-QT_END_NAMESPACE
-
-
-template <>  
 const char * cs_typeName_internal<Phonon::AudioOutputDevice, void>::typeName() 
 { 
    return "AudioOutputDevice"; 
 } 
 
-template const char *cs_typeName_internal<Phonon::AudioOutputDevice,void>::typeName();
-
+QT_END_NAMESPACE
 
 #undef PHONON_CLASSNAME
 #undef PHONON_INTERFACENAME

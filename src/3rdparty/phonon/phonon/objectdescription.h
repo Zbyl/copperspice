@@ -202,6 +202,13 @@ typedef ObjectDescription<SubtitleType> SubtitleDescription;
 
 } //namespace Phonon
 
+template <>
+class PHONON_EXPORT cs_typeName_internal<Phonon::AudioOutputDevice, void>
+{
+public:
+    static const char *typeName();
+};
+
 QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(Phonon::AudioOutputDevice)

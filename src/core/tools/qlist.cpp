@@ -21,3 +21,7 @@
 ***********************************************************************/
 
 #include <qlist.h>
+#include <qset.h>
+
+// Explicit instantiation of exported list.
+template class QList<QString>;

@@ -24,6 +24,7 @@
 #define QLIST_H
 
 #include <qalgorithms.h>
+#include <qstring.h>
 
 #include <deque>
 #include <exception>
@@ -727,6 +728,9 @@ class QMutableListIterator
          return false;
       }
 };
+
+// See QStringList comment for details why this is necessary.
+template class Q_CORE_EXPORT QList<QString>;
 
 QT_END_NAMESPACE
 

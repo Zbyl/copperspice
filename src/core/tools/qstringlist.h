@@ -37,6 +37,11 @@ class QRegExp;
 using QStringListIterator        = QListIterator<QString>;
 using QMutableStringListIterator = QMutableListIterator<QString>;
 
+// Exporting QStringList implicitly exports QList<QString>.
+// As a result we must mark QList<QString> as Q_CORE_EXPORT.
+// Otherwise another use of QList<QString> in other DLL will cause duplicate symbols.
+// We must declare that in qlist.h, so that everyone attempting to instantiate it will import it.
+// Explicit instantiation of QList<QString> is in qlist.cpp.
 class Q_CORE_EXPORT QStringList : public QList<QString>
 {
  public:
