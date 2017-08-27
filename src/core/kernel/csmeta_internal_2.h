@@ -113,7 +113,7 @@ std::pair<T, bool> convertFromQVariant(QVariant data)
 
 // classes for these 2 methods, located in csmeta.h around line 330
 template<class E>
-inline const char *cs_typeName_internal<E, typename std::enable_if<std::is_enum<E>::value>::type  >::typeName()
+const char *cs_typeName_internal<E, typename std::enable_if<std::is_enum<E>::value>::type  >::typeName()
 {
    static QMetaEnum obj = QMetaObject::findEnum<E>();
 
@@ -128,7 +128,7 @@ inline const char *cs_typeName_internal<E, typename std::enable_if<std::is_enum<
 }
 
 template<class E>
-inline const char *cs_typeName_internal< QFlags<E> >::typeName()
+const char *cs_typeName_internal< QFlags<E> >::typeName()
 {
    static QMetaEnum obj = QMetaObject::findEnum<QFlags<E>>();
 

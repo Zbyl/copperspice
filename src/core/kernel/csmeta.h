@@ -372,7 +372,7 @@ class cs_typeName_internal<T, typename std::enable_if< std::is_base_of< QMetaObj
 };
 
 template<class T>
-inline const char *cs_typeName_internal<T, typename std::enable_if< std::is_base_of< QMetaObject ,
+const char *cs_typeName_internal<T, typename std::enable_if< std::is_base_of< QMetaObject ,
        typename std::remove_reference< decltype(T::staticMetaObject() )>::type >::value>::type >::typeName()
 {
    return T::staticMetaObject().className();
