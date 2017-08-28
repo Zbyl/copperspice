@@ -24,4 +24,4 @@
 #include <qset.h>
 
 // Explicit instantiation of exported list.
-template class QList<QString>;
+template class Q_CORE_EXPORT QList<QString>;

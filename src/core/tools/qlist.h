@@ -729,8 +729,10 @@ class QMutableListIterator
       }
 };
 
+#ifdef Q_CC_MSVC
 // See QStringList comment for details why this is necessary.
 template class Q_CORE_EXPORT QList<QString>;
+#endif
 
 QT_END_NAMESPACE
 
