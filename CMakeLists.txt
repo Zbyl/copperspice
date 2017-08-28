@@ -122,6 +122,33 @@ if(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-undefined,error")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-undefined,error")
+elseif(MSVC)
+    # MSVC is generating a massive amounts of warnings.
+    # TODO: Some of them will have to be fixed, but we disable them for now.
+    #
+    # Not useful warnings:
+    # 4250 - class1' : inherits 'class2::member' via dominance
+    # 4996 - use of deprecated / "unsafe" function
+    #
+    # DLL linkage warnings:
+    # 4251 - identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
+    # 4275 - non DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+    # 4273 - inconsistent DLL linkage
+    #
+    # Too many of those are generated:
+    # 4267 - var' : conversion from 'size_t' to 'type', possible loss of data
+    # 4244 - conversion' conversion from 'type1' to 'type2', possible loss of data
+    # 4312 - conversion from 'type1' to 'type2' of greater size
+    # 4334 - result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+    # 4396 - the inline specifier cannot be used when a friend declaration refers to a specialization of a function template
+    # 4291 - declaration' : no matching operator delete found; memory will not be freed if initialization throws an exception
+    #
+    # We get this because we export QList<QString> when it doesn't have toSet() defined yet:
+    # 4661 - identifier' : no suitable definition provided for explicit template instantiation request
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /wd4250 /wd4996")
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4273")
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /wd4267 /wd4244 /wd4312 /wd4334 /wd4396 /wd4291")
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /wd4661")
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-undefined")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
